@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DepthART</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .authors {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .links {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .links a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #0366d6;
+        }
+        h2 {
+            color: #0366d6;
+            border-bottom: 2px solid #0366d6;
+            padding-bottom: 5px;
+        }
+        .abstract, .examples, .hiw {
+            margin-bottom: 30px;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 20px auto;
+        }
+        .teaser {
+        margin-bottom: 30px;
+        text-align: center;
+    }
+    
+    .teaser img {
+        max-width: 100%;
+        height: auto;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    .teaser p {
+        margin-top: 10px;
+            font-style: italic;
+        }
+    a:hover {
+        cursor: pointer;
+    }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>DepthART: Monocular Depth Estimation as Autoregressive Refinement Task</h1>
+        
+        <div class="authors">
+            <p>Bulat Gabdullin<sup>1,</sup><sup>2</sup>, 
+                Nina Konovalova<sup>1</sup>, 
+                Nikolay Patakin<sup>1</sup>, 
+                Dmitry Senushkin <sup>&#9876;,</sup><sup>1</sup>, 
+                Anton Konushin<sup>1</sup></p>
+            <p><sup>1</sup>AIRI, Moscow, Russia <br> <sup>2</sup>HSE University <br><sup>&#9876;</sup>Project leader</p>
+        </div>
+
+        <div class="links">
+            <a href="https://github.com/bulatko/DepthART" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+            <a href="https://arxiv.org/abs/2409.15010" target="_blank"><i class="fas fa-file-alt"></i> arXiv</a>
+        </div>
+
+        <div class="teaser">
+            <img src="paper_head.png" alt="DepthART">
+            <p>Figure 1: We present the Depth Autoregressive Transformer for monocular depth estimation, trained using our novel procedure
+                formulated as the Depth Autoregressive Refinement Task - DepthART. Our model iteratively enhances the depth map by
+                predicting next-scale residuals, resulting in a highly detailed final estimate.</p>
+        </div>
+
+        <div class="abstract">
+            <h2>Abstract</h2>
+            <p>
+                Despite recent success in discriminative approaches in monocular depth estimation its quality remains limited by training datasets. 
+                Generative approaches mitigate this issue by leveraging strong priors derived from training on internet-scale datasets. 
+                Recent studies have demonstrated that large text-to-image diffusion models achieve state-of-the-art results in depth estimation when fine-tuned on small depth datasets. 
+                Concurrently, autoregressive generative approaches, such as the Visual AutoRegressive modeling~(VAR), have shown promising results in conditioned image synthesis. 
+                Following the visual autoregressive modeling paradigm, we introduce the first autoregressive depth estimation model based on the visual autoregressive transformer. 
+                Our primary contribution is DepthART -- a novel training method formulated as Depth Autoregressive Refinement Task. 
+                Unlike the original VAR training procedure, which employs static targets, our method utilizes a dynamic target formulation that enables model self-refinement and incorporates multi-modal guidance during training. 
+                Specifically, we use model predictions as inputs instead of ground truth token maps during training, framing the objective as residual minimization. 
+                Our experiments demonstrate that the proposed training approach significantly outperforms visual autoregressive modeling via next-scale prediction in the depth estimation task. 
+                The Visual Autoregressive Transformer trained with our approach on Hypersim achieves superior results on a set of unseen benchmarks compared to other generative and discriminative baselines.
+            </p>
+        </div>
+
+        <div class="contributions">
+            <h2>Contributions</h2>
+            <ol>
+                <li>We introduce a novel application of autoregressive image modeling for depth estimation by developing the depth autoregressive transformer.</li>
+                <li>We propose a new training paradigm for depth estimation, termed the Depth Autoregressive Refinement Task (DepthART), which facilitates self-refinement and incorporates multi-modal guidance during training.</li>
+                <li>We demonstrate, through extensive experiments, that the depth autoregressive transformer trained with DepthART achieves competitive or superior performance compared to existing baselines across several benchmarks not seen during training.</li>
+            </ol>
+        </div>
+
+        <div class="method">
+            <h2>Method</h2>
+            <h3>Training procedure</h3>
+            <img src="DepthART.png" alt="Training procedure of DepthART model">
+            <p>Figure 2: We highlight the key differences between the original VAR approach (left) and our proposed training approach
+                DepthART (right). In the VAR approach, quantized token maps provided by VQ-VAE serve as both inputs and targets during
+                training. Our DepthART method introduces a refinement process (highlighted in the red box), where the model self-refines by
+                using its predicted token maps as inputs instead of predefined VQ-VAE scales. The targets are defined as the quantized residuals
+                between the encoded depth features fD and the cumulative model predictions up to the current scale. Depth features fD are
+                extracted from the VQ-VAE encoder without undergoing quantization.</p>
+        </div>
+        <div class="examples">
+            <h2>Results</h2>
+
+            <h3>Depth Maps</h3>
+            <div class="carousel">
+                <button class="arrow left-arrow"><i class="fas fa-chevron-left"></i></button>
+                <div class="carousel-container">
+                    <img src="depths/d1.png" alt="Example results of DepthART" class="carousel-item">
+                    <img src="depths/d2.png" alt="Example results of DepthART" class="carousel-item">
+                    <img src="depths/d3.png" alt="Example results of DepthART" class="carousel-item">
+                    <img src="depths/d4.png" alt="Example results of DepthART" class="carousel-item">
+                    <img src="depths/d5.png" alt="Example results of DepthART" class="carousel-item">
+                    <img src="depths/d6.png" alt="Example results of DepthART" class="carousel-item">
+                </div>
+                <button class="arrow right-arrow"><i class="fas fa-chevron-right"></i></button>
+            </div>
+
+            <p>Figure 3: Depth maps generated by DepthART.</p>
+
+            <h3>Point Clouds</h3>
+            <div class="carousel">
+                <button class="arrow left-arrow"><i class="fas fa-chevron-left"></i></button>
+                <div class="carousel-container">
+                    <img src="pcs/ibims-68-1.png" alt="Example results of DepthART" class="carousel-item">
+                    <img src="pcs/ibims-38-1.png" alt="Example results of DepthART" class="carousel-item">
+                    <img src="pcs/ibims-47-1.png" alt="Example results of DepthART" class="carousel-item">
+                    <img src="pcs/nyu-074-1.png" alt="Example results of DepthART" class="carousel-item">
+                    <img src="pcs/nyu-105-1.png" alt="Example results of DepthART" class="carousel-item">
+                    <img src="pcs/nyu-163-1.png" alt="Example results of DepthART" class="carousel-item">
+                    <img src="pcs/ibims-68-1.png" alt="Example results of DepthART" class="carousel-item">
+                    <img src="pcs/ibims-38-1.png" alt="Example results of DepthART" class="carousel-item">
+                </div>
+                <button class="arrow right-arrow"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            <p>Figure 4: Point clouds generated by DepthART.</p>
+        </div>
+
+        <h2>Comparison with other methods</h2>
+            <img src="comparison.png" alt="Comparison with other methods">
+            <p>Quantitative evaluation across benchmarks not seen during training. Overall performance is summarized using a rank
+                metric. Our depth autoregressive transformer, trained with DepthART, outperforms the original VAR training procedure and
+                achieves the highest overall performance among a diverse set of depth estimation baselines.</p>
+
+        <div class="bibtex">
+            <h2>Citiation</h2>
+            <pre><code>
+@article{gabdullin2024depthart,
+    title={DepthART: Monocular Depth Estimation as Autoregressive Refinement Task},
+    author={Gabdullin, Bulat and Konovalova, Nina and Patakin, Nikolay and Senushkin, Dmitry and Konushin, Anton},
+    journal={arXiv preprint arXiv:2409.15010},
+    year={2024}
+}
+
+            </code></pre>
+        </div>
+
+    </div>
+
+    <style>
+        /* ... существующие стили ... */
+
+        .carousel {
+            position: relative;
+            max-width: 100%;
+            overflow: hidden;
+        }
+
+        .carousel-container {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .carousel-item {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+
+        .arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .left-arrow {
+            left: 10px;
+        }
+
+        .right-arrow {
+            right: 10px;
+        }
+
+        .carousel:first-of-type .carousel-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+
+        .carousel:first-of-type .carousel-item {
+            flex: 0 0 30%;
+            max-width: 30%;
+            margin-bottom: 20px;
+        }
+
+        .carousel:first-of-type .arrow {
+            display: none;
+        }
+    </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const carousels = document.querySelectorAll('.carousel');
+        
+        carousels.forEach((carouselContainer, index) => {
+            if (index === 0) {
+                // Для первой карусели отключаем функциональность прокрутки
+                return;
+            }
+            
+            // Остальной код для других каруселей остается без изменений
+            const carousel = carouselContainer.querySelector('.carousel-container');
+            const items = carousel.querySelectorAll('.carousel-item');
+            const leftArrow = carouselContainer.querySelector('.left-arrow');
+            const rightArrow = carouselContainer.querySelector('.right-arrow');
+            let currentIndex = 1;
+            const totalItems = items.length;
+    
+            function showImage(index, direction) {
+                carousel.style.transition = 'transform 0.5s ease-in-out';
+                carousel.style.transform = `translateX(-${index * 100}%)`;
+                
+                if (direction === 'right' && index === totalItems - 1) {
+                    setTimeout(() => {
+                        carousel.style.transition = 'none';
+                        carousel.style.transform = `translateX(-100%)`;
+                        currentIndex = 1;
+                    }, 500);
+                } else if (direction === 'left' && index === 0) {
+                    setTimeout(() => {
+                        carousel.style.transition = 'none';
+                        carousel.style.transform = `translateX(-${(totalItems - 2) * 100}%)`;
+                        currentIndex = totalItems - 2;
+                    }, 500);
+                }
+            }
+    
+            leftArrow.addEventListener('click', () => {
+                currentIndex--;
+                showImage(currentIndex, 'left');
+            });
+    
+            rightArrow.addEventListener('click', () => {
+                currentIndex++;
+                showImage(currentIndex, 'right');
+            });
+    
+            // Инициализация
+            carousel.style.transform = `translateX(-100%)`;
+        });
+    });
+</script>
+
+
+</body>
+</html>
